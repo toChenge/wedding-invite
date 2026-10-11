@@ -13,16 +13,21 @@
   var MAP_URL = 'https://uri.amap.com/search?keyword=' + encodeURIComponent(VENUE + ' ' + ADDRESS) +
     '&city=' + encodeURIComponent('济宁') + '&view=map&callnative=1';
 
-  /* 相册分组：改这里即可调整照片顺序与分组
-     照片：photos/pXX.jpg（大图）/ photos/thumb/pXX.jpg（缩略图） */
+  /* 相册分组：改这里即可调整照片顺序与分组。
+     照片文件：photos/pXX.jpg（大图）/ photos/thumb/pXX.jpg（缩略图）
+     不存在的照片会被自动跳过，删图后不用改代码也能正常显示 */
   var CHAPTERS = [
     { title: '白纱为盟', sub: 'white dress', slots: ['p01', 'p03', 'p04', 'p02'] },
-    { title: '光影相拥', sub: 'lights', slots: ['p06', 'p05'] },
-    { title: '青葱十载', sub: 'green field', slots: ['p08', 'p07', 'p10', 'p11', 'p09'] },
-    { title: '十里红妆', sub: 'chinese style', slots: ['p12', 'p13'] }
+    { title: '青葱十载', sub: 'green field', slots: ['p05', 'p06', 'p07'] },
+    { title: '十里红妆', sub: 'chinese style', slots: ['p08', 'p09'] }
   ];
 
   var photos = window.WEDDING_PHOTOS || {};
+
+  // 过滤掉已删除的照片（保留顺序）
+  CHAPTERS = CHAPTERS.map(function (ch) {
+    return { title: ch.title, sub: ch.sub, slots: ch.slots.filter(function (s) { return !!photos[s]; }) };
+  }).filter(function (ch) { return ch.slots.length > 0; });
   var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var $ = function (id) { return document.getElementById(id); };
 
