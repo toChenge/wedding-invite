@@ -14,8 +14,8 @@
     '&city=' + encodeURIComponent('济宁') + '&view=map&callnative=1';
 
   /* 页面上出现的照片，顺序与 data-idx 对应（每张只出现一次） */
-  var PAGE_PHOTOS = ['p03', 'p01', 'p05', 'p02', 'p08', 'p04', 'p09', 'p07', 'p06'];
-  var PAGE_LABELS = ['封面', '婚礼邀请函', '邀请语', '请柬', '新人', '喜', '日子', '题诗', '地点'];
+  var PAGE_PHOTOS = ['p03', 'p01', 'p05', 'p02', 'p08', 'p04', 'p09', 'p07', 'p10', 'p11', 'p06'];
+  var PAGE_LABELS = ['封面', '婚礼邀请函', '邀请语', '请柬', '新人', '喜', '日子', '题诗', '唱片', '光碟封面', '地点'];
 
   var photos = window.WEDDING_PHOTOS || {};
   var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -162,6 +162,47 @@
   }
 
   if (musicPill) musicPill.addEventListener('click', function () { tryPlayMusic(); });
+
+  /* =========================================================
+     3.5 唱片播放器（和右上角按钮同一首歌）
+     ========================================================= */
+  var discSec = $('song');
+  var playerBtn = $('playerBtn');
+  var playerProgress = $('playerProgress');
+  var playerCur = $('playerCur');
+  var playerDur = $('playerDur');
+
+  function fmtTime(s) {
+    if (!isFinite(s) || s < 0) return '0:00';
+    s = Math.floor(s);
+    return Math.floor(s / 60) + ':' + ('0' + (s % 60)).slice(-2);
+  }
+
+  function updatePlayer() {
+    if (!bgm) return;
+    var playing = !bgm.paused && !bgm.ended;
+    if (discSec) discSec.classList.toggle('is-playing', playing);
+    if (bgm.duration) {
+      if (playerProgress) playerProgress.style.width = (bgm.currentTime / bgm.duration * 100) + '%';
+      if (playerCur) playerCur.textContent = fmtTime(bgm.currentTime);
+      if (playerDur) playerDur.textContent = fmtTime(bgm.duration);
+    }
+  }
+
+  if (playerBtn) {
+    playerBtn.addEventListener('click', function () {
+      if (!bgm) return;
+      if (bgm.paused) tryPlayMusic();
+      else { bgm.pause(); updatePlayer(); }
+    });
+  }
+
+  if (bgm) {
+    ['loadedmetadata', 'durationchange', 'timeupdate', 'play', 'pause', 'ended'].forEach(function (ev) {
+      bgm.addEventListener(ev, updatePlayer);
+    });
+  }
+  window.setInterval(updatePlayer, 1000);
 
   /* =========================================================
      4. 轻提示 + 分享
