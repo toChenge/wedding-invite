@@ -1,7 +1,7 @@
 /* =========================================================
    李庆铎 ♥ 张雪 · 婚礼邀请函
-   交互：开屏 / 花瓣 / 日历 / 倒计时 / 小电影（视频动效）/
-         相册灯箱 / 导航复制 / 音乐 / 分享
+   交互：花瓣 / 音乐 / 日历 / 倒计时 / 点图看大图 /
+         导航复制 / 祝福留言 / 分享
    ========================================================= */
 (function () {
   'use strict';
@@ -13,21 +13,11 @@
   var MAP_URL = 'https://uri.amap.com/search?keyword=' + encodeURIComponent(VENUE + ' ' + ADDRESS) +
     '&city=' + encodeURIComponent('济宁') + '&view=map&callnative=1';
 
-  /* 相册分组：改这里即可调整照片顺序与分组。
-     照片文件：photos/pXX.jpg（大图）/ photos/thumb/pXX.jpg（缩略图）
-     不存在的照片会被自动跳过，删图后不用改代码也能正常显示 */
-  var CHAPTERS = [
-    { title: '白纱为盟', sub: 'white dress', slots: ['p01', 'p03', 'p04', 'p02'] },
-    { title: '青葱十载', sub: 'green field', slots: ['p05', 'p06', 'p07'] },
-    { title: '十里红妆', sub: 'chinese style', slots: ['p08', 'p09'] }
-  ];
+  /* 页面上出现的照片，顺序与 data-idx 对应（每张只出现一次） */
+  var PAGE_PHOTOS = ['p03', 'p01', 'p05', 'p02', 'p08', 'p04', 'p09', 'p07', 'p06'];
+  var PAGE_LABELS = ['封面', '婚礼邀请函', '邀请语', '请柬', '新人', '喜', '日子', '题诗', '地点'];
 
   var photos = window.WEDDING_PHOTOS || {};
-
-  // 过滤掉已删除的照片（保留顺序）
-  CHAPTERS = CHAPTERS.map(function (ch) {
-    return { title: ch.title, sub: ch.sub, slots: ch.slots.filter(function (s) { return !!photos[s]; }) };
-  }).filter(function (ch) { return ch.slots.length > 0; });
   var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var $ = function (id) { return document.getElementById(id); };
 
@@ -87,7 +77,7 @@
       t0 = now;
       if (!dt || dt < 0) dt = 1;
       ctx.clearRect(0, 0, W, H);
-      if (!document.hidden && !reduceMotion && bits.length < 26) bits.push(makePetal());
+      if (!document.hidden && !reduceMotion && bits.length < 24) bits.push(makePetal());
       for (var i = bits.length - 1; i >= 0; i--) {
         var p = bits[i];
         p.phase += 0.012;
@@ -122,14 +112,14 @@
     if (firstTouchDone) return;
     firstTouchDone = true;
     tryPlayMusic();
-    petalBurst(26, W * 0.5, H * 0.28);
+    petalBurst(24, W * 0.5, H * 0.28);
   }
 
   window.addEventListener('touchstart', onFirstTouch, { passive: true });
   window.addEventListener('click', onFirstTouch);
 
   /* =========================================================
-     3. 背景音乐（放 music.mp3 即出现按钮）
+     3. 背景音乐
      ========================================================= */
   var bgm = $('bgm');
   var musicBtn = $('musicBtn');
@@ -233,15 +223,13 @@
     var YEAR = 2026, MONTH = 9, DAY = 26;
     var first = new Date(YEAR, MONTH, 1);
     var total = new Date(YEAR, MONTH + 1, 0).getDate();
-    var offset = (first.getDay() + 6) % 7; // 周一为一周之首
+    var offset = (first.getDay() + 6) % 7;
     var week = ['一', '二', '三', '四', '五', '六', '日'];
     var html = '<div class="cal-week">' + week.map(function (w) { return '<span>' + w + '</span>'; }).join('') + '</div>';
     html += '<div class="cal-days">';
     for (var i = 0; i < offset; i++) html += '<span class="is-empty"></span>';
     for (var d = 1; d <= total; d++) {
-      html += d === DAY
-        ? '<span class="is-day"><b>' + d + '</b></span>'
-        : '<span>' + d + '</span>';
+      html += d === DAY ? '<span class="is-day"><b>' + d + '</b></span>' : '<span>' + d + '</span>';
     }
     html += '</div>';
     html += '<p class="cal-foot">2026年10月26日 · 星期一 · 农历九月十七</p>';
@@ -287,171 +275,18 @@
   window.setInterval(tick, 1000);
 
   /* =========================================================
-     7. 小电影（视频动效）
+     7. 点图看大图（页面上的照片都只有一张，不重复）
      ========================================================= */
-  var filmStage = $('filmStage');
-  var filmSlides = $('filmSlides');
-  var filmChapter = $('filmChapter');
-  var filmCount = $('filmCount');
-  var filmPlay = $('filmPlay');
-  var filmPlayIco = $('filmPlayIco');
-  var filmProgress = $('filmProgress');
-  var realVideo = $('realVideo');
-
-  var flat = [];
-  CHAPTERS.forEach(function (ch) {
-    ch.slots.forEach(function (slot) { flat.push({ slot: slot, chapter: ch.title }); });
-  });
-
-  var SLIDE_MS = 3800;
-  var filmIdx = 0;
-  var filmPlaying = true;
-  var slideStart = 0;
-  var filmBuilt = false;
-  var filmStarted = false;
-
-  function buildFilm() {
-    if (filmBuilt || !filmSlides) return;
-    filmBuilt = true;
-    var html = '';
-    flat.forEach(function (item, i) {
-      html += '<div class="film-slide' + (i % 2 ? ' rev' : '') + '" data-i="' + i + '">' +
-        '<div class="film-slide-bg" style="background-image:url(\'photos/thumb/' + item.slot + '.jpg\')"></div>' +
-        '<img src="photos/thumb/' + item.slot + '.jpg" alt="李庆铎与张雪的婚纱照" loading="' + (i < 2 ? 'eager' : 'lazy') + '" decoding="async">' +
-        '</div>';
-    });
-    filmSlides.innerHTML = html;
-    var first = filmSlides.querySelector('.film-slide');
-    if (first) first.classList.add('is-on');
-    updateFilmCaption();
-  }
-
-  function updateFilmCaption() {
-    var item = flat[filmIdx];
-    if (!item) return;
-    if (filmChapter) filmChapter.textContent = item.chapter;
-    if (filmCount) filmCount.textContent = (filmIdx + 1) + ' / ' + flat.length;
-  }
-
-  function showSlide(i) {
-    if (!filmSlides) return;
-    var nodes = filmSlides.querySelectorAll('.film-slide');
-    if (!nodes.length) return;
-    filmIdx = (i + nodes.length) % nodes.length;
-    for (var k = 0; k < nodes.length; k++) nodes[k].classList.toggle('is-on', k === filmIdx);
-    updateFilmCaption();
-  }
-
-  function frame(now) {
-    if (!filmStarted) return;
-    if (filmPlaying) {
-      if (!slideStart) slideStart = now;
-      var p = (now - slideStart) / SLIDE_MS;
-      if (filmProgress) filmProgress.style.width = Math.min(100, p * 100) + '%';
-      if (p >= 1) { slideStart = now; showSlide(filmIdx + 1); }
-    }
-    requestAnimationFrame(frame);
-  }
-
-  function startFilm() {
-    if (filmStarted) return;
-    if (realVideo && !realVideo.hidden) return;
-    filmStarted = true;
-    buildFilm();
-    slideStart = 0;
-    requestAnimationFrame(frame);
-  }
-
-  function setFilmPlaying(on) {
-    filmPlaying = on;
-    slideStart = 0;
-    if (filmPlayIco) filmPlayIco.textContent = on ? '❚❚' : '▶';
-    if (filmPlay) filmPlay.setAttribute('aria-label', on ? '暂停' : '播放');
-  }
-
-  if (filmStage) {
-    filmStage.addEventListener('click', function () { setFilmPlaying(!filmPlaying); });
-    filmStage.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setFilmPlaying(!filmPlaying); }
-    });
-  }
-
-  var fTouch = 0;
-  if (filmStage) {
-    filmStage.addEventListener('touchstart', function (e) { fTouch = e.changedTouches[0].clientX; }, { passive: true });
-    filmStage.addEventListener('touchend', function (e) {
-      var dx = e.changedTouches[0].clientX - fTouch;
-      if (Math.abs(dx) > 45) { slideStart = 0; showSlide(filmIdx + (dx < 0 ? 1 : -1)); }
-    }, { passive: true });
-  }
-
-  // 根目录有 video.mp4 就播真视频
-  fetch('video.mp4', { method: 'HEAD' })
-    .then(function (r) {
-      if (!r.ok) throw new Error('no video');
-      if (!realVideo || !filmStage) return;
-      realVideo.src = 'video.mp4';
-      realVideo.hidden = false;
-      filmStage.hidden = true;
-      var bar = document.querySelector('.film-bar');
-      if (bar) bar.style.display = 'none';
-      realVideo.play().catch(function () {});
-    })
-    .catch(function () {});
-
-  /* =========================================================
-     8. 相册 + 灯箱
-     ========================================================= */
-  var galleryBody = $('galleryBody');
-  var loadedFull = {};
-  var current = 0;
-
-  function buildGallery() {
-    if (!galleryBody) return;
-    var html = '';
-    CHAPTERS.forEach(function (ch) {
-      html += '<section class="chapter">';
-      html += '<div class="chapter-head">';
-      html += '<h3 class="chapter-title">' + ch.title + '</h3>';
-      html += '<p class="chapter-sub">' + ch.sub + '</p>';
-      html += '</div>';
-      html += '<div class="grid">';
-      var portraits = ch.slots.filter(function (s) { return (photos[s] || {}).portrait !== false; });
-      var lastPortrait = portraits.length % 2 === 1 ? portraits[portraits.length - 1] : null;
-      ch.slots.forEach(function (slot) {
-        var meta = photos[slot] || {};
-        var portrait = meta.portrait !== false;
-        var idx = 0;
-        for (var i = 0; i < flat.length; i++) { if (flat[i].slot === slot) { idx = i; break; } }
-        var cls = 'card reveal' + (portrait ? '' : ' span-2') + (slot === lastPortrait ? ' solo' : '');
-        html += '<button class="' + cls + '" type="button" data-slot="' + slot + '" data-idx="' + idx + '" aria-label="查看第 ' + (idx + 1) + ' 张照片">' +
-          '<span class="ph"><img src="photos/thumb/' + slot + '.jpg" alt="李庆铎与张雪的婚纱照" loading="lazy" decoding="async"' +
-          (meta.w ? ' width="' + meta.w + '" height="' + meta.h + '"' : '') + '></span>' +
-          '</button>';
-      });
-      html += '</div></section>';
-    });
-    galleryBody.innerHTML = html;
-
-    Array.prototype.forEach.call(galleryBody.querySelectorAll('.card'), function (card) {
-      var slot = card.getAttribute('data-slot');
-      var meta = photos[slot];
-      var ph = card.querySelector('.ph');
-      if (meta && meta.lqip && ph) ph.style.backgroundImage = 'url("' + meta.lqip + '")';
-      var img = card.querySelector('img');
-      if (!img) return;
-      if (img.complete && img.naturalWidth) card.classList.add('is-loaded');
-      else img.addEventListener('load', function () { card.classList.add('is-loaded'); });
-      img.addEventListener('error', function () { card.classList.add('is-loaded'); });
-    });
-  }
-
   var lightbox = $('lightbox');
   var lbImg = $('lbImg');
   var lbCap = $('lbCap');
   var lbClose = $('lbClose');
   var lbPrev = $('lbPrev');
   var lbNext = $('lbNext');
+  var current = 0;
+  var loadedFull = {};
+
+  function total() { return PAGE_PHOTOS.length; }
 
   function preload(slot) {
     if (!slot || loadedFull[slot]) return;
@@ -461,18 +296,18 @@
   }
 
   function render(i) {
-    if (!flat.length) return;
-    current = (i + flat.length) % flat.length;
-    var item = flat[current];
-    var meta = photos[item.slot] || {};
+    var n = total();
+    current = (i + n) % n;
+    var slot = PAGE_PHOTOS[current];
+    var meta = photos[slot] || {};
     lbImg.style.opacity = '0';
-    lbImg.src = 'photos/' + item.slot + '.jpg';
+    lbImg.src = 'photos/' + slot + '.jpg';
     lbImg.alt = '李庆铎与张雪的婚纱照 ' + (current + 1);
     if (meta.w) { lbImg.width = meta.w; lbImg.height = meta.h; }
     lbImg.onload = function () { lbImg.style.opacity = '1'; };
-    lbCap.textContent = item.chapter + ' · ' + (current + 1) + ' / ' + flat.length;
-    preload(flat[(current + 1) % flat.length].slot);
-    preload(flat[(current - 1 + flat.length) % flat.length].slot);
+    lbCap.textContent = PAGE_LABELS[current] + ' · ' + (current + 1) + ' / ' + n;
+    preload(PAGE_PHOTOS[(current + 1) % n]);
+    preload(PAGE_PHOTOS[(current - 1 + n) % n]);
   }
 
   function openLightbox(i) {
@@ -489,13 +324,12 @@
     lbImg.src = '';
   }
 
-  if (galleryBody) {
-    galleryBody.addEventListener('click', function (e) {
-      var card = e.target.closest ? e.target.closest('.card') : null;
-      if (!card) return;
-      openLightbox(parseInt(card.getAttribute('data-idx'), 10) || 0);
+  Array.prototype.forEach.call(document.querySelectorAll('[data-idx]'), function (el) {
+    el.style.cursor = 'zoom-in';
+    el.addEventListener('click', function () {
+      openLightbox(parseInt(el.getAttribute('data-idx'), 10) || 0);
     });
-  }
+  });
 
   if (lbClose) lbClose.addEventListener('click', closeLightbox);
   if (lbPrev) lbPrev.addEventListener('click', function (e) { e.stopPropagation(); render(current - 1); });
@@ -528,7 +362,7 @@
   }
 
   /* =========================================================
-     9. 导航 / 复制地址 / 撒花瓣
+     8. 导航 / 复制地址 / 撒花瓣
      ========================================================= */
   var navBtn = $('navBtn');
   if (navBtn) navBtn.href = MAP_URL;
@@ -564,7 +398,7 @@
   }
 
   /* =========================================================
-     9.5 祝福留言（纯前端：提交后复制祝福，粘到微信发给新人）
+     9. 祝福留言（纯前端：提交后复制祝福，粘到微信发给新人）
      ========================================================= */
   var wishForm = $('wishForm');
   var wishName = $('wishName');
@@ -650,7 +484,7 @@
           return c.classList && c.classList.contains('reveal');
         }) : [];
         var idx = sibs.indexOf(el);
-        el.style.transitionDelay = (idx > 0 ? Math.min(idx, 6) * 110 : 0) + 'ms';
+        el.style.transitionDelay = (idx > 0 ? Math.min(idx, 6) * 100 : 0) + 'ms';
         el.classList.add('is-in');
         io.unobserve(el);
       });
@@ -658,18 +492,5 @@
     Array.prototype.forEach.call(items, function (el) { io.observe(el); });
   }
 
-  /* =========================================================
-     11. 启动
-     ========================================================= */
-  buildGallery();
   observeReveals();
-
-  if ('IntersectionObserver' in window && filmStage) {
-    var fio = new IntersectionObserver(function (entries) {
-      if (entries[0].isIntersecting) { startFilm(); fio.disconnect(); }
-    }, { rootMargin: '120px' });
-    fio.observe(filmStage);
-  } else {
-    startFilm();
-  }
 })();

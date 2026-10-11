@@ -11,7 +11,7 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="李庆铎 &amp; 张雪 · 婚礼邀请函">
 <meta property="og:description" content="our wedding · 2026.10.26 · 济宁市任城区水泊梁山风味酒楼">
-<meta property="og:image" content="photos/p06.jpg">
+<meta property="og:image" content="photos/p03.jpg">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23ffffff'/%3E%3Ctext x='32' y='46' font-size='40' text-anchor='middle' fill='%23b70000' font-family='serif'%3E%E5%9B%8D%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="assets/css/style.css">
 </head>
@@ -38,10 +38,10 @@
 
 <main>
 
-  <!-- ============ 1 首屏 ============ -->
+  <!-- ============ 1 首屏（封面图 p03） ============ -->
   <section class="hero" id="hero">
-    <div class="hero-media">
-      <img id="heroImg" src="photos/p06.jpg" alt="李庆铎与张雪的婚纱照" decoding="async">
+    <div class="hero-media" data-idx="0">
+      <img id="heroImg" src="photos/p03.jpg" alt="李庆铎与张雪的婚纱照" decoding="async">
     </div>
     <div class="hero-veil" aria-hidden="true"></div>
     <div class="hero-inner">
@@ -51,11 +51,23 @@
       <p class="hero-meta">2026 . 10 . 26</p>
       <p class="hero-place">济宁市任城区 · 水泊梁山风味酒楼</p>
     </div>
-    <a class="scroll-cue" href="#words" aria-label="往下看"><span></span></a>
+    <a class="scroll-cue" href="#invite" aria-label="往下看"><span></span></a>
   </section>
 
-  <!-- ============ 2 邀请语（文左 图右） ============ -->
-  <section class="section" id="words">
+  <!-- ============ 2 婚礼邀请函（圆徽章 p01） ============ -->
+  <section class="section center" id="invite">
+    <figure class="medallion reveal" data-idx="1">
+      <img src="photos/thumb/p01.jpg" alt="李庆铎与张雪的婚纱照">
+    </figure>
+    <h2 class="art-cn xl reveal">婚礼邀请函</h2>
+    <p class="art-en reveal">welcome to our wedding</p>
+    <svg class="wave reveal" viewBox="0 0 320 22" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M2 14 C 40 4, 70 22, 105 12 S 165 2, 200 14 S 265 22, 318 8" />
+    </svg>
+  </section>
+
+  <!-- ============ 3 邀请语（文左 · 图右 p05） ============ -->
+  <section class="section">
     <div class="side">
       <div class="side-text">
         <p class="art-en">to you</p>
@@ -67,44 +79,16 @@
         <p class="line">愿往后的每一个平凡日子</p>
         <p class="line">都有你的祝福，都有光</p>
       </div>
-      <figure class="side-media">
-        <img src="photos/thumb/p03.jpg" alt="李庆铎与张雪的婚纱照" loading="lazy" decoding="async">
-      </figure>
-    </div>
-  </section>
-
-  <!-- ============ 3 英文句（图左 文右） ============ -->
-  <section class="section">
-    <div class="side rev">
-      <figure class="side-media">
+      <figure class="side-media" data-idx="2">
         <img src="photos/thumb/p05.jpg" alt="李庆铎与张雪的婚纱照" loading="lazy" decoding="async">
       </figure>
-      <div class="side-text">
-        <p class="art-en">grow old along with me</p>
-        <p class="en-label left">the best is yet to be</p>
-        <p class="line">慢慢过日子，好好爱彼此</p>
-        <p class="line">一起看遍四季，一起慢慢变老</p>
-        <p class="en-label left soft">love &nbsp;·&nbsp; laughter &nbsp;·&nbsp; forever</p>
-      </div>
     </div>
   </section>
 
-  <!-- ============ 4 圆徽章 + 标题 ============ -->
-  <section class="section center">
-    <figure class="medallion reveal">
-      <img src="photos/thumb/p01.jpg" alt="李庆铎与张雪的婚纱照">
-    </figure>
-    <h2 class="art-cn xl reveal">婚礼邀请函</h2>
-    <p class="art-en reveal">welcome to our wedding</p>
-    <svg class="wave reveal" viewBox="0 0 320 22" preserveAspectRatio="none" aria-hidden="true">
-      <path d="M2 14 C 40 4, 70 22, 105 12 S 165 2, 200 14 S 265 22, 318 8" />
-    </svg>
-  </section>
-
-  <!-- ============ 5 请柬三行（图左 文右） ============ -->
+  <!-- ============ 4 请柬三行（图左 · 文右 p02） ============ -->
   <section class="section">
     <div class="side rev">
-      <figure class="side-media">
+      <figure class="side-media" data-idx="3">
         <img src="photos/thumb/p02.jpg" alt="李庆铎与张雪的婚纱照" loading="lazy" decoding="async">
       </figure>
       <div class="side-text">
@@ -119,7 +103,7 @@
     </div>
   </section>
 
-  <!-- ============ 6 新人（文左 图右） ============ -->
+  <!-- ============ 5 新人（文左 · 图右 p08） ============ -->
   <section class="section" id="couple">
     <div class="side">
       <div class="side-text">
@@ -129,16 +113,16 @@
         <p class="pair"><span class="pair-en">Bride</span><span class="pair-name">张雪</span></p>
         <p class="line soft">朝朝暮暮，岁岁平安</p>
       </div>
-      <figure class="side-media">
+      <figure class="side-media" data-idx="4">
         <img src="photos/thumb/p08.jpg" alt="李庆铎与张雪的婚纱照" loading="lazy" decoding="async">
       </figure>
     </div>
   </section>
 
-  <!-- ============ 7 喜 + 竖排（图左 文右） ============ -->
+  <!-- ============ 6 喜 + 竖排（图左 · 文右 p04） ============ -->
   <section class="section">
     <div class="side rev">
-      <figure class="side-media tall">
+      <figure class="side-media tall" data-idx="5">
         <img src="photos/thumb/p04.jpg" alt="李庆铎与张雪的婚纱照" loading="lazy" decoding="async">
       </figure>
       <div class="side-text xi-text">
@@ -149,10 +133,10 @@
     </div>
   </section>
 
-  <!-- ============ 8 日子 ============ -->
+  <!-- ============ 7 日子（图左 · 文右 p09） ============ -->
   <section class="section center" id="date">
     <div class="side rev date-side">
-      <figure class="side-media">
+      <figure class="side-media" data-idx="6">
         <img src="photos/thumb/p09.jpg" alt="李庆铎与张雪的婚纱照" loading="lazy" decoding="async">
       </figure>
       <div class="side-text">
@@ -175,35 +159,7 @@
     <p class="cd-note reveal" id="cdNote">distance to our big day</p>
   </section>
 
-  <!-- ============ 9 小电影 ============ -->
-  <section class="section center" id="film">
-    <p class="art-en reveal">our little movie</p>
-    <h2 class="art-cn reveal">我们的小电影</h2>
-
-    <div class="film-card reveal">
-      <video id="realVideo" class="film-video" playsinline controls loop muted hidden></video>
-      <div class="film-stage" id="filmStage" role="button" tabindex="0" aria-label="婚礼照片电影，点击暂停或继续">
-        <div class="film-slides" id="filmSlides"></div>
-        <div class="film-shade" aria-hidden="true"></div>
-        <div class="film-caption">
-          <span class="film-chapter" id="filmChapter"></span>
-          <span class="film-count" id="filmCount"></span>
-        </div>
-        <button class="film-play" id="filmPlay" type="button" aria-label="播放或暂停"><span id="filmPlayIco">❚❚</span></button>
-      </div>
-      <div class="film-bar"><i id="filmProgress"></i></div>
-    </div>
-    <p class="hint reveal">自动播放 · 点一下暂停 · 左右滑动换一张</p>
-  </section>
-
-  <!-- ============ 10 相册 ============ -->
-  <section class="section gallery" id="gallery">
-    <p class="art-en reveal">our sweet day</p>
-    <h2 class="art-cn reveal">甜蜜瞬间</h2>
-    <div id="galleryBody"></div>
-  </section>
-
-  <!-- ============ 11 题诗（文左 图右） ============ -->
+  <!-- ============ 8 题诗（文左 · 图右 p07） ============ -->
   <section class="section" id="poem">
     <div class="side">
       <div class="side-text">
@@ -220,16 +176,16 @@
           <p>举杯同邀宴宾楼。</p>
         </div>
       </div>
-      <figure class="side-media">
+      <figure class="side-media" data-idx="7">
         <img src="photos/thumb/p07.jpg" alt="李庆铎与张雪的婚纱照" loading="lazy" decoding="async">
       </figure>
     </div>
   </section>
 
-  <!-- ============ 12 地点（图左 文右） ============ -->
+  <!-- ============ 9 地点（图左 · 文右 p06） ============ -->
   <section class="section" id="address">
     <div class="side rev">
-      <figure class="side-media">
+      <figure class="side-media" data-idx="8">
         <img src="photos/thumb/p06.jpg" alt="李庆铎与张雪的婚纱照" loading="lazy" decoding="async">
       </figure>
       <div class="side-text">
@@ -246,7 +202,7 @@
     </div>
   </section>
 
-  <!-- ============ 13 祝福留言 ============ -->
+  <!-- ============ 10 祝福留言 ============ -->
   <section class="section center" id="rsvp">
     <p class="art-en reveal">leave your wishes</p>
     <h2 class="art-cn reveal">祝福留言</h2>
@@ -274,7 +230,7 @@
     </div>
   </section>
 
-  <!-- ============ 14 谢谢你 ============ -->
+  <!-- ============ 11 谢谢你 ============ -->
   <section class="section center thanks">
     <p class="art-en reveal">thank you</p>
     <p class="line reveal">千言万语，最后都汇成一句谢谢你</p>
@@ -284,7 +240,7 @@
     <p class="xi-sm reveal">囍</p>
   </section>
 
-  <!-- ============ 15 结尾 ============ -->
+  <!-- ============ 12 结尾 ============ -->
   <footer class="section center footer" id="footer">
     <p class="art-en big reveal">see you there</p>
     <h2 class="footer-names reveal"><span>李庆铎</span><i>&amp;</i><span>张雪</span></h2>
