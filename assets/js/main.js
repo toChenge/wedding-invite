@@ -109,28 +109,19 @@
   }
 
   /* =========================================================
-     2. 开屏
+     2. 首次交互：微信 / 浏览器需要一次点击才允许播放音乐
      ========================================================= */
-  var cover = $('cover');
-  var openBtn = $('openBtn');
-  var opened = false;
+  var firstTouchDone = false;
 
-  function openInvitation() {
-    if (opened) return;
-    opened = true;
-    cover.classList.add('is-open');
-    document.body.classList.remove('is-locked');
-    document.body.classList.add('is-ready');
+  function onFirstTouch() {
+    if (firstTouchDone) return;
+    firstTouchDone = true;
     tryPlayMusic();
-    if (navigator.vibrate) { try { navigator.vibrate(18); } catch (e) {} }
-    var r = openBtn.getBoundingClientRect();
-    petalBurst(36, r.left + r.width / 2, r.top + r.height / 2);
-    window.setTimeout(function () { petalBurst(30, W * 0.5, H * 0.36); }, 320);
-    window.setTimeout(function () { cover.style.display = 'none'; }, 1000);
+    petalBurst(26, W * 0.5, H * 0.28);
   }
 
-  if (openBtn) openBtn.addEventListener('click', openInvitation);
-  if (cover) cover.addEventListener('click', function (e) { if (e.target === cover) openInvitation(); });
+  window.addEventListener('touchstart', onFirstTouch, { passive: true });
+  window.addEventListener('click', onFirstTouch);
 
   /* =========================================================
      3. 背景音乐（放 music.mp3 即出现按钮）
@@ -138,13 +129,16 @@
   var bgm = $('bgm');
   var musicBtn = $('musicBtn');
   var musicIco = $('musicIco');
+  var musicPill = $('musicPill');
   var musicAvailable = false;
 
   function setMusicState(on) {
-    if (!musicBtn) return;
-    musicBtn.classList.toggle('is-on', on);
+    if (musicBtn) {
+      musicBtn.classList.toggle('is-on', on);
+      musicBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    }
     if (musicIco) musicIco.textContent = on ? '♫' : '♪';
-    musicBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    if (musicPill) musicPill.classList.toggle('is-hidden', on);
   }
 
   function tryPlayMusic() {
@@ -153,17 +147,15 @@
     if (p && p.then) p.then(function () { setMusicState(true); }).catch(function () { setMusicState(false); });
   }
 
-  var coverTip = document.querySelector('.cover-tip');
-
   fetch('music.mp3', { method: 'HEAD' })
     .then(function (r) {
       if (!r.ok) throw new Error('no music');
       musicAvailable = true;
-      if (musicBtn) musicBtn.hidden = false;
+      if (musicPill) musicPill.classList.remove('is-hidden');
     })
     .catch(function () {
       if (musicBtn) musicBtn.hidden = true;
-      if (coverTip) coverTip.textContent = '轻触开启 · 慢慢往下滑';
+      if (musicPill) musicPill.classList.add('is-hidden');
     });
 
   if (musicBtn) {
@@ -173,6 +165,8 @@
       else { bgm.pause(); setMusicState(false); }
     });
   }
+
+  if (musicPill) musicPill.addEventListener('click', function () { tryPlayMusic(); });
 
   /* =========================================================
      4. 轻提示 + 分享
@@ -561,6 +555,76 @@
       window.setTimeout(function () { petalBurst(40, W * 0.24, H * 0.55); }, 200);
       window.setTimeout(function () { petalBurst(40, W * 0.76, H * 0.55); }, 400);
       toast('谢谢你的祝福，我们不见不散');
+    });
+  }
+
+  /* =========================================================
+     9.5 祝福留言（纯前端：提交后复制祝福，粘到微信发给新人）
+     ========================================================= */
+  var wishForm = $('wishForm');
+  var wishName = $('wishName');
+  var wishText = $('wishText');
+  var wishDone = $('wishDone');
+  var wishDoneText = $('wishDoneText');
+  var wishCopy = $('wishCopy');
+  var wishAgain = $('wishAgain');
+  var lastWish = '';
+
+  function legacyCopy(str, okMsg) {
+    var ta = document.createElement('textarea');
+    ta.value = str;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); if (okMsg) toast(okMsg); } catch (e) {}
+    ta.remove();
+  }
+
+  function copyText(str, okMsg) {
+    if (!str) return;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(str).then(function () { if (okMsg) toast(okMsg); })
+        .catch(function () { legacyCopy(str, okMsg); });
+    } else legacyCopy(str, okMsg);
+  }
+
+  if (wishForm) {
+    wishForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var n = (wishName.value || '').trim();
+      var t = (wishText.value || '').trim();
+      var bad = false;
+      wishName.parentNode.classList.toggle('is-bad', !n);
+      if (!n) bad = true;
+      wishText.parentNode.classList.toggle('is-bad', !t);
+      if (!t) bad = true;
+      if (bad) { toast('称呼和祝福都要写一点点哦'); return; }
+
+      lastWish = '【婚礼祝福】' + n + '：' + t;
+      if (wishDoneText) wishDoneText.textContent = lastWish;
+      wishForm.hidden = true;
+      if (wishDone) wishDone.hidden = false;
+      copyText(lastWish, '祝福已复制，粘贴到微信发给新人吧');
+      petalBurst(28, W * 0.5, H * 0.6);
+    });
+  }
+
+  if (wishCopy) {
+    wishCopy.addEventListener('click', function () {
+      copyText(lastWish || (wishDoneText ? wishDoneText.textContent : ''), '祝福已复制');
+    });
+  }
+
+  if (wishAgain) {
+    wishAgain.addEventListener('click', function () {
+      if (wishDone) wishDone.hidden = true;
+      if (wishForm) {
+        wishForm.hidden = false;
+        wishText.value = '';
+        wishName.parentNode.classList.remove('is-bad');
+        wishText.parentNode.classList.remove('is-bad');
+      }
     });
   }
 

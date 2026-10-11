@@ -15,31 +15,21 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23ffffff'/%3E%3Ctext x='32' y='46' font-size='40' text-anchor='middle' fill='%23b70000' font-family='serif'%3E%E5%9B%8D%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="assets/css/style.css">
 </head>
-<body class="is-locked">
+<body>
 
 <canvas id="petals" aria-hidden="true"></canvas>
 
-<!-- 顶部小按钮 -->
 <div class="topbar">
-  <button class="rbtn" id="musicBtn" type="button" hidden aria-label="背景音乐"><span id="musicIco">♪</span></button>
+  <button class="rbtn" id="musicBtn" type="button" aria-label="背景音乐"><span id="musicIco">♪</span></button>
   <button class="rbtn" id="shareBtn" type="button" aria-label="分享">
     <svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true"><path d="M12 3v11m0-11 4 4m-4-4L8 7M5 13v6a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
   </button>
 </div>
 
-<!-- ================= 开屏 ================= -->
-<div class="cover" id="cover">
-  <div class="cover-photo" id="coverPhoto" aria-hidden="true"></div>
-  <div class="cover-veil" aria-hidden="true"></div>
-  <div class="cover-inner">
-    <p class="script">our wedding</p>
-    <h1 class="cover-names"><span>李庆铎</span><i>囍</i><span>张雪</span></h1>
-    <p class="cover-en">2026 . 10 . 26</p>
-    <p class="cover-cn">诚邀您见证我们的幸福</p>
-    <button class="cover-btn" id="openBtn" type="button">点 击 开 启</button>
-  </div>
-  <p class="cover-tip">轻触开启 · 慢慢往下滑</p>
-</div>
+<!-- 音乐提示（微信/浏览器需要一次点击才能播放） -->
+<button class="music-pill" id="musicPill" type="button">
+  <span class="note" aria-hidden="true">♪</span> 点击播放音乐
+</button>
 
 <div class="share-tip" id="shareTip" hidden>
   <div class="share-tip-box">
@@ -51,43 +41,51 @@
 
 <main>
 
-  <!-- ================= 首屏 ================= -->
+  <!-- ============ 首屏：通栏大图 ============ -->
   <section class="hero" id="hero">
     <div class="hero-media">
       <img id="heroImg" src="photos/p08.jpg" alt="李庆铎与张雪的婚纱照" decoding="async">
     </div>
     <div class="hero-veil" aria-hidden="true"></div>
     <div class="hero-inner">
-      <p class="script big reveal">our wedding</p>
-      <h2 class="hero-names reveal"><span>李庆铎</span><i>囍</i><span>张雪</span></h2>
-      <p class="hero-en reveal">Li Qingduo &amp; Zhang Xue</p>
-      <p class="hero-line reveal"><span></span>2026 . 10 . 26<span></span></p>
+      <p class="script big">our wedding</p>
+      <h1 class="hero-names"><span>李庆铎</span><i>囍</i><span>张雪</span></h1>
+      <p class="hero-en">Li Qingduo &amp; Zhang Xue</p>
+      <p class="hero-meta">2026 . 10 . 26</p>
+      <p class="hero-place">济宁市任城区 · 水泊梁山风味酒楼</p>
     </div>
-    <a class="scroll-cue" href="#invite" aria-label="往下看"><span></span></a>
+    <a class="scroll-cue" href="#words" aria-label="往下看"><span></span></a>
   </section>
 
-  <!-- ================= 圆形照片 + 邀请函 ================= -->
-  <section class="section invite" id="invite">
+  <!-- ============ 邀请语 ============ -->
+  <section class="section words" id="words">
+    <p class="line reveal">从各自的山海，走到同一盏灯下</p>
+    <p class="line reveal">我们把喜欢，过成了岁岁年年</p>
+    <p class="line reveal">诚邀生命中重要的你</p>
+    <p class="line reveal">来见证这一场双向的奔赴</p>
+    <p class="line reveal">愿往后的每一个平凡日子</p>
+    <p class="line reveal">都有你的祝福，都有光</p>
+  </section>
+
+  <!-- ============ 通栏照片 + 英文句 ============ -->
+  <section class="bleed">
+    <figure class="bleed-photo reveal">
+      <img src="photos/p09.jpg" alt="李庆铎与张雪的婚纱照" loading="lazy" decoding="async">
+    </figure>
+    <p class="en-quote reveal">grow old along with me, the best is yet to be</p>
+    <p class="cn-quote reveal">慢慢过日子，好好爱彼此</p>
+  </section>
+
+  <!-- ============ 圆形照片 + 标题 ============ -->
+  <section class="section medallion-sec">
     <figure class="medallion reveal">
       <img src="photos/thumb/p04.jpg" alt="李庆铎与张雪的婚纱照">
     </figure>
-
     <h2 class="cn-title reveal">婚礼邀请函</h2>
     <p class="en-label reveal">welcome to our wedding</p>
-
-    <div class="poem-lines">
-      <p class="reveal">我们曾各自奔赴人海</p>
-      <p class="reveal">直到目光交汇的那一刻，才懂什么叫归处</p>
-      <p class="reveal">诚邀生命中重要的你</p>
-      <p class="reveal">来见证这一场双向的奔赴</p>
-      <p class="reveal">愿往后的每一个平凡日子</p>
-      <p class="reveal">都因你的祝福，闪着光</p>
-    </div>
-
     <svg class="wave reveal" viewBox="0 0 320 22" preserveAspectRatio="none" aria-hidden="true">
       <path d="M2 14 C 40 4, 70 22, 105 12 S 165 2, 200 14 S 265 22, 318 8" />
     </svg>
-
     <ul class="invite-lines">
       <li class="reveal">良辰已定 &nbsp;吉日待访</li>
       <li class="reveal">吾有薄酒 &nbsp;以谢良友</li>
@@ -95,28 +93,9 @@
     </ul>
   </section>
 
-  <!-- ================= 日子 ================= -->
-  <section class="section date" id="date">
-    <p class="en-label reveal">our wedding day</p>
-    <p class="big-date reveal"><span>10</span><i>/</i><span>26</span></p>
-    <p class="date-cn reveal">2026年10月26日 &nbsp;星期一</p>
-    <p class="date-lunar reveal">农历九月十七</p>
-
-    <div class="calendar reveal" id="calendar" aria-label="2026年10月日历"></div>
-
-    <div class="countdown reveal" id="countdown" aria-label="婚礼倒计时">
-      <div class="cd-cell"><b id="cdD">--</b><span>天</span></div>
-      <div class="cd-cell"><b id="cdH">--</b><span>时</span></div>
-      <div class="cd-cell"><b id="cdM">--</b><span>分</span></div>
-      <div class="cd-cell"><b id="cdS">--</b><span>秒</span></div>
-    </div>
-    <p class="cd-note reveal" id="cdNote">距离我们的大日子</p>
-  </section>
-
-  <!-- ================= 新人 ================= -->
+  <!-- ============ 新人 ============ -->
   <section class="section couple" id="couple">
     <p class="en-label reveal">i love you</p>
-
     <div class="couple-grid">
       <div class="person reveal">
         <p class="person-en">Groom</p>
@@ -130,14 +109,47 @@
         <p class="person-name">张雪</p>
       </div>
     </div>
-
-    <figure class="wide-photo reveal">
-      <img src="photos/thumb/p08.jpg" alt="李庆铎与张雪的婚纱照" loading="lazy" decoding="async">
-    </figure>
-    <p class="side-en reveal">love is space and time measured by the heart</p>
+    <p class="cn-quote reveal">把这一路的风景，都写成我们的故事</p>
   </section>
 
-  <!-- ================= 小电影 ================= -->
+  <!-- ============ 拼贴：喜 + 竖排字 ============ -->
+  <section class="section collage">
+    <div class="collage-head reveal">
+      <p class="en-label left">with you, always</p>
+      <p class="xi">喜</p>
+    </div>
+
+    <div class="collage-row reveal">
+      <figure class="photo-portrait">
+        <img src="photos/thumb/p03.jpg" alt="李庆铎与张雪的婚纱照" loading="lazy" decoding="async">
+      </figure>
+      <p class="vertical-cn">以余生长伴，许你白首</p>
+    </div>
+
+    <figure class="photo-wide reveal">
+      <img src="photos/thumb/p02.jpg" alt="李庆铎与张雪的婚纱照" loading="lazy" decoding="async">
+    </figure>
+  </section>
+
+  <!-- ============ 日子 ============ -->
+  <section class="section date" id="date">
+    <p class="en-label reveal">our wedding day</p>
+    <p class="big-date reveal"><span>10</span><i>/</i><span>26</span></p>
+    <p class="date-cn reveal">2026年10月26日 &nbsp;星期一</p>
+    <p class="date-lunar reveal">农历九月十七 &nbsp;·&nbsp; 中午 12:00 开席</p>
+
+    <div class="calendar reveal" id="calendar" aria-label="2026年10月日历"></div>
+
+    <div class="countdown reveal" id="countdown" aria-label="婚礼倒计时">
+      <div class="cd-cell"><b id="cdD">--</b><span>天</span></div>
+      <div class="cd-cell"><b id="cdH">--</b><span>时</span></div>
+      <div class="cd-cell"><b id="cdM">--</b><span>分</span></div>
+      <div class="cd-cell"><b id="cdS">--</b><span>秒</span></div>
+    </div>
+    <p class="cd-note reveal" id="cdNote">距离我们的大日子</p>
+  </section>
+
+  <!-- ============ 小电影 ============ -->
   <section class="section film" id="film">
     <p class="en-label reveal">our little movie</p>
     <h2 class="cn-title sm reveal">我们的小电影</h2>
@@ -158,14 +170,14 @@
     <p class="hint reveal">自动播放 · 点一下暂停 · 左右滑动换一张</p>
   </section>
 
-  <!-- ================= 相册 ================= -->
+  <!-- ============ 相册 ============ -->
   <section class="section gallery" id="gallery">
     <p class="en-label reveal">our sweet day</p>
     <h2 class="cn-title sm reveal">甜蜜瞬间</h2>
     <div id="galleryBody"></div>
   </section>
 
-  <!-- ================= 题诗 ================= -->
+  <!-- ============ 题诗 ============ -->
   <section class="section poem" id="poem">
     <p class="en-label reveal">to you</p>
     <h2 class="cn-title sm reveal">题 · 同心</h2>
@@ -182,42 +194,69 @@
     <svg class="wave reveal" viewBox="0 0 320 22" preserveAspectRatio="none" aria-hidden="true">
       <path d="M2 14 C 40 4, 70 22, 105 12 S 165 2, 200 14 S 265 22, 318 8" />
     </svg>
-    <p class="poem-sign reveal">以岁月为证，以白首为期</p>
   </section>
 
-  <!-- ================= 地点 ================= -->
+  <!-- ============ 地点 ============ -->
   <section class="section address" id="address">
     <p class="en-label reveal">Address</p>
     <h2 class="cn-title sm reveal">水泊梁山风味酒楼</h2>
     <p class="addr reveal">济宁市任城区常青路与济安桥路交界处</p>
+    <p class="addr-sub reveal">2026年10月26日 &nbsp;·&nbsp; 中午 12:00</p>
 
     <div class="addr-btns reveal">
       <a class="btn-solid" id="navBtn" href="#" target="_blank" rel="noopener">一键导航</a>
       <button class="btn-line" id="copyAddr" type="button">复制地址</button>
     </div>
+  </section>
 
-    <div class="thanks">
-      <p class="reveal">千言万语，最后都汇成一句谢谢你</p>
-      <p class="reveal">谢谢你出现在我的生命里</p>
-      <p class="reveal">让我懂得什么是义无反顾</p>
-      <p class="reveal">也懂得什么是双向奔赴</p>
+  <!-- ============ 祝福留言 ============ -->
+  <section class="section rsvp" id="rsvp">
+    <p class="en-label reveal">leave your wishes</p>
+    <h2 class="cn-title sm reveal">祝福留言</h2>
+
+    <form class="wish-form reveal" id="wishForm" novalidate>
+      <label class="field">
+        <span class="field-label">您的称呼 <i>*</i></span>
+        <input id="wishName" name="name" type="text" maxlength="20" placeholder="如：小李一家" required>
+      </label>
+      <label class="field">
+        <span class="field-label">想对我们说的话 <i>*</i></span>
+        <textarea id="wishText" name="text" rows="3" maxlength="120" placeholder="写下你的祝福…" required></textarea>
+      </label>
+      <button class="btn-solid submit" id="wishSubmit" type="submit">提 交</button>
+      <p class="form-tip" id="wishTip">提交后会复制你的祝福，粘贴到微信发给新人即可 ❤</p>
+    </form>
+
+    <div class="wish-done" id="wishDone" hidden>
+      <p class="wish-done-title">谢谢你的祝福 🎉</p>
+      <p class="wish-done-text" id="wishDoneText"></p>
+      <div class="wish-done-btns">
+        <button class="btn-solid" id="wishCopy" type="button">复制祝福</button>
+        <button class="btn-line" id="wishAgain" type="button">再写一条</button>
+      </div>
     </div>
   </section>
 
-  <!-- ================= 结尾 ================= -->
+  <!-- ============ 谢谢你 ============ -->
+  <section class="section thanks">
+    <p class="line reveal">千言万语，最后都汇成一句谢谢你</p>
+    <p class="line reveal">谢谢你出现在我的生命里</p>
+    <p class="line reveal">让我懂得什么是义无反顾</p>
+    <p class="line reveal">也懂得什么是双向奔赴</p>
+    <p class="xi-sm reveal">囍</p>
+  </section>
+
+  <!-- ============ 结尾 ============ -->
   <footer class="section footer" id="footer">
-    <p class="footer-seal reveal">囍</p>
     <h2 class="footer-names reveal"><span>李庆铎</span><i>&amp;</i><span>张雪</span></h2>
     <p class="footer-date reveal">2026年10月26日 &nbsp;·&nbsp; 星期一 &nbsp;·&nbsp; 农历九月十七</p>
     <p class="footer-place reveal">济宁市任城区水泊梁山风味酒楼</p>
-
     <button class="cheer-btn reveal" id="cheerBtn" type="button">为我们撒一把花瓣</button>
     <p class="footer-thx reveal">期待与您相见 &nbsp;·&nbsp; 我们不见不散</p>
   </footer>
 
 </main>
 
-<!-- ================= 大图 ================= -->
 <div class="lightbox" id="lightbox" hidden>
   <button class="lb-close" id="lbClose" type="button" aria-label="关闭">✕</button>
   <button class="lb-nav lb-prev" id="lbPrev" type="button" aria-label="上一张">‹</button>
@@ -228,7 +267,7 @@
   </figure>
 </div>
 
-<audio id="bgm" src="music.mp3" loop preload="none"></audio>
+<audio id="bgm" src="music.mp3" loop preload="auto"></audio>
 
 <script src="assets/js/photos-data.js"></script>
 <script src="assets/js/main.js"></script>
